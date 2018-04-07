@@ -51,11 +51,8 @@ public class RandomNumberGame {
 				if (i == intNumOfGuesses) {
 					System.out.println("\nOut of attempts, you suck. number was " + intRandomAnswer);
 					break;
-
 				} else if (intUserResponse < intRandomAnswer) {
-					System.out.println("hint: go higher2");
-				} else if (intUserResponse < intRandomAnswer) {
-					System.out.println("hint: go higher1");
+					System.out.println("hint: go higher");
 				} else if (intUserResponse > intRandomAnswer) {
 					System.out.println("hint: go lower");
 				}
