@@ -13,8 +13,7 @@ public class TwoDie {
 		int rolled_double_score = 0;
 		
 		// Loop 25 times, starting at 1
-		int i=1;
-		while (i <= 25) {
+		for (int i=1; i <= 25; i++) {
 			// Get random number between 1 and 6 for each die
 			die_one_roll = die.nextInt(6) + 1;
 			die_two_roll = die.nextInt(6) + 1;
@@ -30,7 +29,6 @@ public class TwoDie {
 				System.out.println("You rolled a double!!"); // Test line to see if rolled double
 			}
 			
-			i++;
 		}
 
 		// Game is over and displaying how many times two die rolled double
