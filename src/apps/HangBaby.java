@@ -1,15 +1,14 @@
 package apps;
 
 
-public class HangPerson {
+public class HangBaby {
 
 	
-	public int numOfTurns = 8;			// Number of times a user can guess
-	private String secretWord;			// The word for the user to guess 
-	private String[] maskedWord;		// Copy's the secret word by replacing each letter with an underscore. 
-										// Underscores eventually get replaced by it's real letter as user guesses correctly
-	private String spacer = "    ";		// Used as left padding for drawing post/hang person
-			
+	public int numOfTurns = 8;									// Number of times a user can guess
+	private String secretWord;									// The word for the user to guess
+	private StringBuilder maskedWord = new StringBuilder();		// Copy the secret word by substituting each letter with an underscore.
+																// Underscores eventually get replaced by it's real letter as user guesses correctly
+	private String spacer = "    ";								// Used as left padding for drawing post/hang person		
 	private String[] bodyParts = new String[6];
 	/*  
 		Contains the structure of building the post/hang person.
@@ -30,42 +29,16 @@ public class HangPerson {
 	 * Constructor
 	 *********************************************************************
 	 */
-	public HangPerson(String word) {
+	public HangBaby(String word) {
 		// The word to guess
 		secretWord = word;
 		
-		// Mask the word to guess
-		setMaskedWord(secretWord);
+		// Mask the letters of the secret word to the StringBuilder variable.
+		// Regular expression is used to replace letters a-z with _
+		maskedWord.append( secretWord.replaceAll("[a-zA-Z]", "_") );
 	}
 
-
-
-	/* 
-	 *********************************************************************
-	 * Setter/Getter
-	 *********************************************************************
-	 */
-	private void setMaskedWord(String word) {
-		// Let's store it in an array
-		maskedWord = new String[word.length()];
-		
-		// Mask the letters of the secret word with an underscore
-		for (int i=0; i < word.length(); i++) {
-			maskedWord[i] = "_";
-		}
-	}
-	private String getMaskedWord() {
-		String cleanMaskedWord = "";
-		
-		// Mask the letters of the secret word with an underscore
-		for (int i=0; i < maskedWord.length; i++) {
-			cleanMaskedWord += maskedWord[i];
-		}
-		
-		return cleanMaskedWord;
-	}
 	
-
 
 	/* 
 	 *********************************************************************
@@ -73,12 +46,8 @@ public class HangPerson {
 	 *********************************************************************
 	 */
 	public void displayMaskedWordProgress() {
-		System.out.print("The Word: ");
-		
-		for (int i=0; i < maskedWord.length; i++) {
-			System.out.print(maskedWord[i] + " ");
-		}
-		
+		// Display masked word with a space between each letter
+		System.out.print( "The Word: " + maskedWord.toString().replace("", " ").trim() );
 		System.out.println("\n");
 	}
 	
@@ -89,11 +58,12 @@ public class HangPerson {
 			// Convert letter (char) to string
 			String secretLetter = Character.toString( secretWord.charAt(i) );
 			
+			// Check if letter from secretWord matches user's letter
 			if ( secretLetter.compareToIgnoreCase(userLetter) == 0 ) {
 				foundLetter = true;
 				
 				// Update letter in masked word
-				maskedWord[i] = userLetter;
+				maskedWord.replace(i, i+1, userLetter);
 			}
 		}
 		
@@ -101,7 +71,7 @@ public class HangPerson {
 	}
 
 	public boolean isWordComplete() {
-		if ( secretWord.compareToIgnoreCase(getMaskedWord()) == 0 ) {
+		if ( secretWord.compareToIgnoreCase(maskedWord.toString()) == 0 ) {
 			return true;
 		}
 				

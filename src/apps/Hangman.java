@@ -1,96 +1,77 @@
 package apps;
 
 import java.util.Scanner;
-import java.util.Arrays;
-import java.util.List;
 
 public class Hangman {
 
 	public static void main(String[] args) {
-	
-		
+
+
 		// Randomize the word somewhere here...
-		String new_word = "arty";
-		
-		HangPerson hangMan = new HangPerson(new_word);
+		HangBaby hangMan = new HangBaby("arty simon");
 
-
-		
 		Scanner shit = new Scanner(System.in);
 		String userInput;
-		int turn = 1;
 		boolean foundMatch = false;
-		String[] savedLetters = new String[100];
+		String[] savedLetters = new String[100]; // TODO - ugly
+		int turn = 1;
 		
 		
 		
 		while (turn <= hangMan.numOfTurns) {
-			// Reset foundMatch
+			// Reset flag foundMatch
 			foundMatch = false;
 			
 			System.out.print("\nGuess a letter (turn " + turn + ")? ");
 			userInput = shit.nextLine();
-						
+			
 			
 			
 			// Check if user entered letter twice
 			if ( didUserRepeatLetter(savedLetters, userInput) ) {
+				
 				// if true, tell user they entered that letter already
 				System.out.println("You already entered " + userInput + ". Try a different letter.");
 				
 			} else {
 
-				// Store user letter
+				// Store user's letter
 				savedLetters[turn-1] = userInput;
 				
-				// Check letter
-				for (int i=0; i < hangMan.secretWord.length(); i++) {
-					// Convert letter (char) to string
-					String secretLetter = Character.toString(hangMan.secretWord.charAt(i));
-					
-					if ( secretLetter.compareToIgnoreCase(userInput) == 0 ) {
-						foundMatch = true;
-						hangMan.updateMaskedWordLetter(i, userInput);
-					}
-				}
-			
+				// Check letter by passing user's input,
+				// returns true if match found
+				foundMatch = hangMan.checkLetter(userInput);
 				
-				if (foundMatch) { // No turn is taken away
+				if (foundMatch) { // No turn is taken away if guess is correct
+					
+					// Display to console current progress of masked word
+					hangMan.displayMaskedWordProgress();
 					
 					// Check if winner
 					if ( hangMan.isWordComplete() ) {
-						// Unveil the masked word
-						hangMan.displayMaskedWord();
-						
 						System.out.println("Congrats, you win!!");
 						
 						// Get out of loop
 						turn = hangMan.numOfTurns + 1;
-
-					} else {
-						// Display masked word
-						hangMan.displayMaskedWord();
 					}
-					
+				
 				} else { // Lost a turn
+
+					// Display hang person and masked word
+					hangMan.displayHangMan(turn);
+					hangMan.displayMaskedWordProgress();
 					
-					// Check if it was the last turn
+					// Check if this is last turn
 					if (turn == (hangMan.numOfTurns)) {
 						System.out.println("\nGame over");
-						turn++;
-					} else {
-						// next turn, start incrementing
-						hangMan.drawHangMan(turn);
-						turn++;
-						
-						// Display masked word
-						hangMan.displayMaskedWord();
 					}
-				}
-				
-			}
-
-		}
+					
+					// Continue to next turn
+					turn++;
+					
+				} // end if foundMatch
+			} // end if didUserRepeatLetter
+		} // end while
 
 
 		
@@ -102,8 +83,6 @@ public class Hangman {
 	
 	// TODO - find a better solution
 	public static boolean didUserRepeatLetter(String[] arryLetters, String userLetter) {
-		boolean letterRepeated = false;
-		
 		for (int i=0; i < arryLetters.length; i++) {
 			if ( arryLetters[i] != null ) {
 				if ( arryLetters[i].compareToIgnoreCase(userLetter) == 0 ) {
@@ -112,7 +91,7 @@ public class Hangman {
 			}
 		}
 		
-		return letterRepeated;
+		return false;
 	}
 	
 	
